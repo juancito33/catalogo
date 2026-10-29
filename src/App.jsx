@@ -93,7 +93,15 @@ export default function App() {
         />
         <nav className="categorias">
           {categorias.map((c) => (
-            <button key={c} className={c === categoria ? 'activa' : ''} onClick={() => setCategoria(c)}>
+            <button
+              key={c}
+              className={c === categoria ? 'activa' : ''}
+              onClick={(e) => {
+                setCategoria(c)
+                window.scrollTo({ top: 0, behavior: 'smooth' })
+                e.currentTarget.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' })
+              }}
+            >
               {c}
             </button>
           ))}
