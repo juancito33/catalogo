@@ -2,7 +2,8 @@ import { useEffect, useMemo, useState } from 'react'
 
 // Los precios y la configuración vienen de n8n (ahí están guardados los precios mayoristas, que no se publican).
 const DATOS = 'https://n8n.srv894441.hstgr.cloud/webhook/catalogo-datos'
-const FOTOS = import.meta.env.BASE_URL + 'fotos/'
+const BASE = import.meta.env.BASE_URL
+const FOTOS = BASE + 'fotos/'
 
 const pesos = (n) => '$' + Number(n).toLocaleString('es-CO')
 
@@ -24,7 +25,9 @@ export default function App() {
       .then((r) => (r.ok ? r.json() : Promise.reject()))
       .then((d) => {
         setDatos(d)
-        if (d.tienda) document.title = d.tienda
+        // cada proveedor tiene su estilo (colores de la portada de su catálogo)
+        document.documentElement.dataset.tema = d.lista || 'barberia'
+        document.title = d.tienda || (d.lista === 'ibe' ? 'Catálogo de productos IBE' : 'Catálogo')
       })
       .catch(() => setError(true))
   }, [])
@@ -79,11 +82,26 @@ export default function App() {
 
   return (
     <>
-      <header className="cabecera">
-        <div className="marca">
+      {datos.lista === 'ibe' ? (
+        <header className="portada">
+          <img className="logo" src={BASE + 'ibe/logo.png'} alt="IBE Importadora y Distribuidora" />
+          <div className="ola">
+            <h1>Catálogo</h1>
+            <span>de productos</span>
+          </div>
+          {(datos.tienda || datos.mensaje) && (
+            <p className="tienda">
+              {datos.tienda && <strong>{datos.tienda}</strong>} {datos.mensaje}
+            </p>
+          )}
+        </header>
+      ) : (
+        <header className="marca">
           <h1>{datos.tienda || 'Catálogo'}</h1>
           {datos.mensaje && <p>{datos.mensaje}</p>}
-        </div>
+        </header>
+      )}
+      <div className="cabecera">
         <input
           className="buscar"
           type="search"
@@ -106,7 +124,7 @@ export default function App() {
             </button>
           ))}
         </nav>
-      </header>
+      </div>
 
       <main className="rejilla">
         {visibles.map((p) => (

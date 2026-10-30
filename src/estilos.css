@@ -29,8 +29,10 @@ button { font: inherit; cursor: pointer; }
   background: rgba(15, 15, 15, 0.94);
   backdrop-filter: blur(8px);
   border-bottom: 1px solid var(--borde);
-  padding: 14px 16px 10px;
+  padding: 10px 16px;
 }
+
+.marca { padding: 16px 16px 4px; }
 
 .marca h1 {
   font-family: 'Pirata One', serif;
@@ -44,7 +46,6 @@ button { font: inherit; cursor: pointer; }
 
 .buscar {
   width: 100%;
-  margin-top: 10px;
   padding: 11px 14px;
   border-radius: 10px;
   border: 1px solid var(--borde);
@@ -280,3 +281,130 @@ button { font: inherit; cursor: pointer; }
 }
 
 @keyframes girar { to { transform: rotate(360deg); } }
+
+/* ===== Tema IBE: colores y letras de la portada de su catálogo ===== */
+:root[data-tema='ibe'] {
+  --fondo: #ffffff;
+  --tarjeta: #f1f1f1;
+  --borde: #d9d9d9;
+  --texto: #111111;
+  --suave: #555555;
+  --acento: #e9be12;
+  --azul: #004aac;
+  --verde: #00be61;
+  --rojo: #e8352e;
+  color-scheme: light;
+}
+
+[data-tema='ibe'] body { font-family: 'Questrial', system-ui, sans-serif; font-size: 16px; }
+
+.portada {
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  padding: 22px 16px 0;
+  background: #fff;
+}
+
+/* garabatos amarillos y puntos verdes de la portada */
+.portada::before {
+  content: '';
+  position: absolute;
+  top: -60px;
+  right: -50px;
+  width: 150px;
+  height: 150px;
+  border: 14px solid var(--acento);
+  border-radius: 50%;
+  border-left-color: transparent;
+  border-bottom-color: transparent;
+  transform: rotate(-20deg);
+}
+
+.portada::after {
+  content: '';
+  position: absolute;
+  right: 14px;
+  bottom: 8px;
+  width: 70px;
+  height: 46px;
+  background: radial-gradient(circle, var(--verde) 6px, transparent 7px) 0 0 / 23px 23px;
+  opacity: 0.9;
+}
+
+.portada .logo { position: relative; width: min(72vw, 330px); height: auto; z-index: 1; }
+
+.ola {
+  position: relative;
+  margin: 14px -16px 0;
+  padding: 26px 16px 40px;
+  background: var(--azul);
+  /* borde de arriba y de abajo en forma de ola */
+  -webkit-mask: radial-gradient(60px 22px at 50% 0, transparent 98%, #000) 0 0 / 120px 51% repeat-x,
+    radial-gradient(60px 22px at 50% 100%, transparent 98%, #000) 0 100% / 120px 51% repeat-x;
+  mask: radial-gradient(60px 22px at 50% 0, transparent 98%, #000) 0 0 / 120px 51% repeat-x,
+    radial-gradient(60px 22px at 50% 100%, transparent 98%, #000) 0 100% / 120px 51% repeat-x;
+}
+
+.ola h1 {
+  margin: 0;
+  font-family: 'Pacifico', cursive;
+  font-weight: 400;
+  font-size: clamp(54px, 15vw, 96px);
+  line-height: 1.45;
+  color: var(--acento);
+  text-shadow: 0 0 0 #fff, 3px 3px 0 #003a88;
+}
+
+.ola span {
+  display: inline-block;
+  margin-top: 16px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: clamp(20px, 6vw, 30px);
+  color: #111;
+  background: #fff;
+  padding: 2px 14px;
+  border-radius: 999px;
+  transform: rotate(-4deg);
+}
+
+.portada .tienda { position: relative; z-index: 1; margin: 6px 0 14px; color: var(--suave); }
+.portada .tienda strong { color: var(--azul); }
+
+[data-tema='ibe'] .cabecera { background: rgba(255, 255, 255, 0.95); }
+[data-tema='ibe'] .buscar { background: #f6f6f6; border-color: var(--borde); color: var(--texto); }
+
+[data-tema='ibe'] .categorias button {
+  border-color: var(--azul);
+  color: var(--azul);
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  text-transform: none;
+}
+
+[data-tema='ibe'] .categorias button.activa { background: var(--acento); border-color: var(--acento); color: #111; }
+
+[data-tema='ibe'] .tarjeta { border: 0; border-radius: 22px; background: var(--tarjeta); }
+[data-tema='ibe'] .foto { background: #fff; }
+[data-tema='ibe'] .info h2 { font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 16px; }
+[data-tema='ibe'] .ref { color: var(--azul); font-size: 12px; }
+[data-tema='ibe'] .desc { font-size: 13px; }
+
+[data-tema='ibe'] .precio {
+  font-family: 'Poppins', sans-serif;
+  font-size: 18px;
+  color: #111;
+  background: var(--acento);
+  padding: 2px 12px;
+  border-radius: 999px;
+}
+
+[data-tema='ibe'] .agotado .precio { background: var(--rojo); color: #fff; font-size: 15px; }
+[data-tema='ibe'] .agregar { background: var(--azul); color: #fff; font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 14px; }
+[data-tema='ibe'] .cantidad button { background: #fff; color: var(--azul); border-color: var(--azul); }
+[data-tema='ibe'] .barra-pedido { background: var(--azul); color: #fff; font-family: 'Poppins', sans-serif; }
+[data-tema='ibe'] .panel { background: #fff; }
+[data-tema='ibe'] .enviar { background: var(--verde); color: #fff; font-family: 'Poppins', sans-serif; }
+[data-tema='ibe'] .final a { color: var(--azul); }
