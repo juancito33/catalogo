@@ -334,55 +334,18 @@ button { font: inherit; cursor: pointer; }
 
 .portada .logo { position: relative; width: min(72vw, 330px); height: auto; z-index: 1; }
 
-/* escena en capas: olas a tres alturas, productos flotando por detrás y por delante de la franja */
-.escena {
+.ola {
   position: relative;
-  margin: 0 -16px;
-  padding: 74px 16px 74px;
-}
-
-.ondas {
-  position: absolute;
-  inset: 62px 0 52px;
-  z-index: 2;
-  filter: drop-shadow(0 14px 18px rgba(0, 40, 110, 0.35));
-}
-
-.ola-capa {
-  position: absolute;
-  inset: 0;
+  margin: 14px -16px 0;
+  padding: 26px 16px 40px;
   background: var(--azul);
+  /* borde de arriba y de abajo en forma de ola */
   -webkit-mask: radial-gradient(60px 22px at 50% 0, transparent 98%, #000) 0 0 / 120px 51% repeat-x,
     radial-gradient(60px 22px at 50% 100%, transparent 98%, #000) 0 100% / 120px 51% repeat-x;
   mask: radial-gradient(60px 22px at 50% 0, transparent 98%, #000) 0 0 / 120px 51% repeat-x,
     radial-gradient(60px 22px at 50% 100%, transparent 98%, #000) 0 100% / 120px 51% repeat-x;
 }
 
-/* las capas de atrás se corren media ola y suben un poco: así se ve el escalón entre niveles */
-.ola-capa.atras {
-  background: linear-gradient(180deg, #9cc4ff, #5d9bf0);
-  -webkit-mask-position: 60px 0, 60px 100%;
-  mask-position: 60px 0, 60px 100%;
-  transform: translate3d(calc(var(--mx, 0) * -10px), calc(-18px + var(--sy, 0) * 0.04px), 0);
-}
-
-.ola-capa.medio {
-  background: linear-gradient(180deg, #3f86ec, #1c5fc4);
-  -webkit-mask-position: 30px 0, 30px 100%;
-  mask-position: 30px 0, 30px 100%;
-  transform: translate3d(calc(var(--mx, 0) * -5px), calc(-9px + var(--sy, 0) * 0.02px), 0);
-}
-
-.ola-capa.frente { background: linear-gradient(180deg, #0a5bcc 0%, var(--azul) 55%, #003a8c 100%); }
-
-.ola {
-  position: relative;
-  z-index: 3;
-  padding: 6px 0 20px;
-  text-align: center;
-}
-
-/* "Catálogo" con relieve: el amarillo se levanta sobre varias capas de azul oscuro */
 .ola h1 {
   margin: 0;
   font-family: 'Pacifico', cursive;
@@ -390,9 +353,7 @@ button { font: inherit; cursor: pointer; }
   font-size: clamp(54px, 15vw, 96px);
   line-height: 1.45;
   color: var(--acento);
-  text-shadow: -1px -1px 0 #fff3b0, 1px 1px 0 #c99a06, 2px 2px 0 #a97f00, 3px 3px 0 #002f72, 4px 4px 0 #002f72,
-    5px 5px 0 #00275f, 6px 6px 0 #00275f, 7px 7px 0 #001f4d, 10px 14px 16px rgba(0, 10, 40, 0.5);
-  transform: translate3d(calc(var(--mx, 0) * 6px), calc(var(--my, 0) * 4px), 0);
+  text-shadow: 0 0 0 #fff, 3px 3px 0 #003a88;
 }
 
 .ola span {
@@ -403,55 +364,10 @@ button { font: inherit; cursor: pointer; }
   font-size: clamp(20px, 6vw, 30px);
   color: #111;
   background: #fff;
-  padding: 2px 16px;
+  padding: 2px 14px;
   border-radius: 999px;
   transform: rotate(-4deg);
-  box-shadow: 0 4px 0 var(--acento), 0 10px 18px rgba(0, 20, 60, 0.4);
 }
-
-/* productos flotando: tarjetas blancas inclinadas, con sombra según qué tan cerca están */
-.flota {
-  position: absolute;
-  margin: 0;
-  width: min(22vw, 150px);
-  padding: 5px;
-  background: #fff;
-  border-radius: 18px;
-  box-shadow: 0 2px 0 #e3e3e3, 0 12px 24px rgba(0, 30, 80, 0.28);
-  transform: translate3d(calc(var(--mx, 0) * var(--prof) * 1px), calc(var(--sy, 0) * var(--prof) * -0.012px + var(--my, 0) * var(--prof) * 0.6px), 0)
-    rotate(var(--giro));
-}
-
-.flota img {
-  display: block;
-  width: 100%;
-  aspect-ratio: 1;
-  object-fit: contain;
-  border-radius: 14px;
-  animation: flotar 5s ease-in-out infinite;
-}
-
-.flota1 { --prof: 8; --giro: -10deg; z-index: 1; left: 3%; top: 6px; }
-.flota2 { --prof: 26; --giro: 8deg; z-index: 4; left: 2%; bottom: 10px; width: min(20vw, 140px); }
-.flota3 { --prof: 10; --giro: 9deg; z-index: 1; right: 4%; top: 14px; width: min(19vw, 130px); }
-.flota4 { --prof: 30; --giro: -7deg; z-index: 4; right: 2%; bottom: 4px; }
-.flota2, .flota4 { box-shadow: 0 3px 0 #e3e3e3, 0 22px 34px rgba(0, 30, 80, 0.38); }
-.flota2 img { animation-delay: -1.5s; }
-.flota3 img { animation-delay: -3s; }
-.flota4 img { animation-delay: -4s; }
-
-@keyframes flotar { 50% { transform: translateY(-6px); } }
-
-@media (min-width: 720px) {
-  .escena { padding: 84px 16px 84px; }
-  .ondas { inset: 70px 0 60px; }
-  .flota1 { left: 9%; }
-  .flota2 { left: 14%; }
-  .flota3 { right: 12%; }
-  .flota4 { right: 8%; }
-}
-
-@media (prefers-reduced-motion: reduce) { .flota img { animation: none; } }
 
 .portada .tienda { position: relative; z-index: 1; margin: 6px 0 14px; color: var(--suave); }
 .portada .tienda strong { color: var(--azul); }
