@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 // Los precios y la configuración vienen de n8n (ahí están guardados los precios mayoristas, que no se publican).
 const DATOS = 'https://n8n.srv894441.hstgr.cloud/webhook/catalogo-datos'
@@ -9,6 +9,62 @@ const pesos = (n) => '$' + Number(n).toLocaleString('es-CO')
 
 function catalogoPedido() {
   return new URLSearchParams(location.search).get('c') || 'principal'
+}
+
+// Fotos que flotan en la portada IBE (fondo blanco, se ven bien en tarjetas); si alguna falta se usan otras.
+const FOTOS_PORTADA_IBE = ['Be-0006', 'Be-0008', 'HO-0001', 'EL-0001']
+
+// Portada IBE en capas: olas azules a distinta altura, "Catálogo" con relieve y productos flotando
+// por delante y por detrás de la franja. Se mueve un poco con el ratón y al bajar por la página.
+function PortadaIbe({ productos, children }) {
+  const ref = useRef(null)
+
+  const fotos = useMemo(() => {
+    const conFoto = productos.filter((p) => p.foto && !p.agotado)
+    const elegidas = FOTOS_PORTADA_IBE.map((c) => conFoto.find((p) => p.foto.includes(c))).filter(Boolean)
+    for (const p of conFoto) if (elegidas.length < 4 && !elegidas.includes(p)) elegidas.push(p)
+    return elegidas.slice(0, 4)
+  }, [productos])
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el || matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    const mover = (e) => {
+      const r = el.getBoundingClientRect()
+      el.style.setProperty('--mx', ((e.clientX - r.left) / r.width - 0.5).toFixed(3))
+      el.style.setProperty('--my', ((e.clientY - r.top) / r.height - 0.5).toFixed(3))
+    }
+    const bajar = () => el.style.setProperty('--sy', Math.min(window.scrollY, 500).toFixed(0))
+    el.addEventListener('pointermove', mover)
+    window.addEventListener('scroll', bajar, { passive: true })
+    return () => {
+      el.removeEventListener('pointermove', mover)
+      window.removeEventListener('scroll', bajar)
+    }
+  }, [])
+
+  return (
+    <header className="portada" ref={ref}>
+      <img className="logo" src={BASE + 'ibe/logo.png'} alt="IBE Importadora y Distribuidora" />
+      <div className="escena">
+        {fotos.map((p, i) => (
+          <figure key={p.id} className={'flota flota' + (i + 1)} aria-hidden="true">
+            <img src={FOTOS + p.foto} alt="" />
+          </figure>
+        ))}
+        <div className="ondas" aria-hidden="true">
+          <div className="ola-capa atras" />
+          <div className="ola-capa medio" />
+          <div className="ola-capa frente" />
+        </div>
+        <div className="ola">
+          <h1>Catálogo</h1>
+          <span>de productos</span>
+        </div>
+      </div>
+      {children}
+    </header>
+  )
 }
 
 export default function App() {
@@ -83,18 +139,13 @@ export default function App() {
   return (
     <>
       {datos.lista === 'ibe' ? (
-        <header className="portada">
-          <img className="logo" src={BASE + 'ibe/logo.png'} alt="IBE Importadora y Distribuidora" />
-          <div className="ola">
-            <h1>Catálogo</h1>
-            <span>de productos</span>
-          </div>
+        <PortadaIbe productos={productos}>
           {(datos.tienda || datos.mensaje) && (
             <p className="tienda">
               {datos.tienda && <strong>{datos.tienda}</strong>} {datos.mensaje}
             </p>
           )}
-        </header>
+        </PortadaIbe>
       ) : (
         <header className="marca">
           <h1>{datos.tienda || 'Catálogo'}</h1>
